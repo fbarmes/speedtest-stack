@@ -4,6 +4,9 @@ version: "3"
 networks:
   net-speedtest:
 
+volumes:
+  grafana_data: {}
+  prometheus_data: {}
 
 
 services:
@@ -18,6 +21,26 @@ services:
       - 9100:9100
 
   #-----------------------------------------------------------------------------
+  node-exporter:
+    image: prom/node-exporter:v1.3.1
+    restart: unless-stopped
+    networks:
+      - net-speedtest
+    command:
+      - '--path.rootfs=/host'
+    volumes:
+      - '/:/host:ro,rslave'
+
+  #-----------------------------------------------------------------------------
+  snmp-exporter:
+    image: prom/snmp-exporter:v0.20.0
+    restart: unless-stopped
+    networks:
+      - net-speedtest
+    ports:
+      - 9116:9116
+
+  #-----------------------------------------------------------------------------
   prometheus:
     image: prom/prometheus:v2.33.5
     networks:
@@ -30,6 +53,7 @@ services:
       - "--web.enable-admin-api"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/data/prometheus
     ports:
       - 9090:9090
 
@@ -44,6 +68,7 @@ services:
       GF_SECURITY_ADMIN_PASSWORD: "secret"
     volumes:
       - ./grafana/provisionning/:/etc/grafana/provisioning/
+      - grafana_data:/var/lib/grafana
     ports:
       # grafana UI port
       - 3000:3000
