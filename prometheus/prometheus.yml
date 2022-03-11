@@ -1,0 +1,41 @@
+#
+# Prometheus configuration file
+#
+#
+
+#-------------------------------------------------------------------------------
+# Global Configuration
+#-------------------------------------------------------------------------------
+global:
+  scrape_interval:     30s
+  scrape_timeout:      30s
+  evaluation_interval: 30s
+
+#-------------------------------------------------------------------------------
+# Scrape configuration
+#
+#-------------------------------------------------------------------------------
+
+scrape_configs:
+  #--------------------------------------------
+  # scrape prometheus itself
+  #--------------------------------------------
+  - job_name: prometheus
+    honor_timestamps: true
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets:
+        - localhost:9090
+  #--------------------------------------------
+  # scrape speedtest
+  #--------------------------------------------
+  - job_name: speedtest
+    honor_timestamps: true
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets:
+        - speedtest-exporter:9100
