@@ -10,7 +10,7 @@ services:
 
   #-----------------------------------------------------------------------------
   speedtest-exporter:
-    image: speedtest-exporter:1.1-SNAPSHOT-arm
+    image: fbarmes/speedtest-exporter:1.1-arm
     restart: unless-stopped
     networks:
       - net-speedtest
@@ -19,7 +19,7 @@ services:
 
   #-----------------------------------------------------------------------------
   prometheus:
-    image: prom/prometheus:v2.25.0
+    image: prom/prometheus:v2.33.5
     networks:
       - net-speedtest
     command:
@@ -36,7 +36,7 @@ services:
 
   #-----------------------------------------------------------------------------
   grafana:
-    image: grafana/grafana:7.4.2
+    image: grafana/grafana:8.4.3
     networks:
       - net-speedtest
     environment:
